@@ -1,10 +1,10 @@
 # Real-Estate-Listing-Platform
-A platform for listing and searching real estate properties.
+A web application enabling users to browse properties for sale and rent, and agents to manage their listings.
 
 # Framework
 Spring Boot
 
-## Spring Intializr
+## Spring Initializr
 ### Project 
 Gradle - Groovy
 
