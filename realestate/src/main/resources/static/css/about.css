@@ -1,0 +1,144 @@
+* margin {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+/* Container for entire content */
+.decorative-box {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  position: relative;
+  z-index: 20;
+}
+.nav-left .logo {
+  display: flex;
+  align-items: center;
+}
+.logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff, #000000);
+  margin-right: 5px;
+}
+.company-text {
+  font-size: 1.5rem;
+  font-family: sans-serif;
+  color: #000000;
+  transition: color 0.3s ease;
+}
+.company-text-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.company-text-link:hover .company-text {
+  color: #555555;
+}
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+}
+.nav-links li {
+  margin: 0 40px;
+}
+.nav-links a {
+  text-decoration: none;
+  font-size: 1.0rem;
+  color: #000000;
+}
+.nav-links .active-link {
+  position: relative;
+}
+.nav-links .active-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #000000;
+}
+
+/* Flex container to hold welcome and background sections */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* about message */
+.about-wrapper {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 40px;
+  width: 80%;
+  max-width: 800px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+.about-wrapper h1 {
+  font-size: 2.5rem;
+  color: #000000;
+  margin-bottom: 1.5rem;
+}
+.about-wrapper p {
+  font-size: 1.1rem;
+  color: #333333;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* Background image container */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/images/aboutpageBG.png') no-repeat center center;
+  background-size: cover;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+/* Make sure the page container allows for proper positioning */
+.page-container {
+  position: relative;
+  min-height: calc(100vh - 70px);
+  margin-top: 0;
+  overflow: hidden;
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About us</title>
+  <link rel="stylesheet" th:href="@{/css/about.css}" />
+</head>
+<body>
+    <div class="decorative-box">
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="nav-left">
+            <div class="logo">
+                <span class="logo-circle"></span>
+                <a th:href="@{/welcome}" class="company-text-link">
+                    <span class="company-text">Spring Real Estate</span>
+                </a>
+            </div>
+            </div>
+            <div class="nav-right">
+            <ul class="nav-links">
+                <li><a th:href="@{/home}">Home</a></li>
+                <li><a th:href="@{/properties}">Properties</a></li>
+                <li><a th:href="@{/about}" class="active-link">About us</a></li>
+            </ul>
+            </div>
+        </nav>
+        <!-- About content -->
+        <div class="page-container">
+            <div class="about-wrapper">
+                <h1 th:text="${aboutMessage}">About Us</h1>
+                <p th:text="${aboutText}">Welcome to Spring Real Estate, where finding your dream property is just a click away. Founded in 2025, we've built a modern platform that connects buyers, sellers, and agents through innovative technology. Our mission is to simplify the real estate journey by providing a transparent, user-friendly experience for everyone involved. Whether you're looking to buy your first home, sell a property, or grow your portfolio, our platform offers the tools and resources you need. With our dedicated team of real estate professionals and technology experts, we're committed to revolutionizing how people interact with real estate. We combine industry expertise with cutting-edge technology to deliver a seamless experience from search to closing. Thank you for choosing Spring Real Estate for your property needs. We look forward to helping you find the perfect place to call home.
+                </p>
+            </div>
+            <div class="bg-image"></div>
+        </div>
+    </div>
+</body>
+</html>
