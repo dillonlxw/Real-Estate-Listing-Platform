@@ -13,7 +13,7 @@ html, body {
 }
 
 body {
-  background-color: #ffffff; 
+  background-color: #ffffff;
   font-family: Arial, sans-serif;
 }
 
@@ -40,7 +40,6 @@ nav {
   height: 40px;
   border-radius: 50%;
   background: radial-gradient(circle, #ffffff, #000000);
-
   margin-right: 5px;
 }
 .company-text {
@@ -88,17 +87,17 @@ nav {
   width: 100%;
   position: absolute;
   box-sizing: border-box;
-  text-align: center; 
+  text-align: center;
   margin-bottom: 0;
-} 
-.welcome-wrapper h1 { 
-  font-size: 3rem; 
-  color: #000000; 
-  margin-bottom: 1rem; 
 }
-.welcome-wrapper p { 
-  font-size: 1rem; 
-  color: #000000; 
+.welcome-wrapper h1 {
+  font-size: 3rem;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+.welcome-wrapper p {
+  font-size: 1rem;
+  color: #000000;
 }
 
 /* Background image container fills remaining space */
