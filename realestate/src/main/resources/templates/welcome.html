@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome</title>
+  <link rel="stylesheet" th:href="@{/css/welcome.css}" />
+</head>
+<body>
+    <div class="decorative-box">
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="nav-left">
+            <div class="logo">
+                <span class="logo-circle"></span>
+                <span class="company-text">Spring Real Estate</span>
+            </div>
+            </div>
+            <div class="nav-right">
+            <ul class="nav-links">
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/properties}">Properties</a></li>
+                <li><a th:href="@{/about}">About</a></li>
+            </ul>
+            <button class="login" onclick="location.href='\login'">Login</button>
+            </div>
+        </nav>
+        <!-- Page container using flex layout -->
+        <div class="page-container">
+            <!-- White welcome message container -->
+            <div class="welcome-wrapper">
+                <h1 th:text="${welcomeMessage}">Welcome</h1>
+                <p th:text="${welcomeText}"> Welcome to our Spring Real Estate Portal—your first step toward discovering the perfect property. Explore, connect, and get inspired as you embark on your home journey.
+                </p>
+            </div>
+            <!-- Background image container fills remaining space -->
+            <div class="bg-image"></div>
+        </div>
+    </div>
+</body>
+</html>
