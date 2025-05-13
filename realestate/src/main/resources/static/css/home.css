@@ -33,6 +33,8 @@ nav {
   background-color: #ffffff;
   position: relative;
   z-index: 20;
+  height: 70px;
+  box-sizing: border-box;
 }
 .nav-left .logo {
   display: flex;

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Properties</title>
+  <link rel="stylesheet" th:href="@{/css/properties.css}" />
+</head>
+<body>
+    <div class="decorative-box">
+        <!-- Navigation Bar -->
+        <nav>
+            <div class="nav-left">
+            <div class="logo">
+                <span class="logo-circle"></span>
+                <a th:href="@{/}" class="company-text-link">
+                    <span class="company-text">Spring Real Estate</span>
+                </a>
+            </div>
+            </div>
+            <div class="nav-right">
+            <ul class="nav-links">
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{/properties}" class="active-link">Properties</a></li>
+                <li><a th:href="@{/about}">About us</a></li>
+            </ul>
+            </div>
+        </nav>
+        <!-- Properties content -->
+        <div class="page-container">
+            <div class="properties-wrapper">
+                <div class="properties-header">
+                    <h1 th:text="${propertiesMessage}">Properties</h1>
+                    <div class="action-buttons">
+                        <a class="action-button select-button" onclick="showPopup()">Filter</a>
+                        <div id="popup" class="popup">
+                            <div class="popup-content">
+                                <span class="close-button" onclick="hidePopup()">&times;</span>
+                                <h2>Filter Property</h2>
+                                <p>Filter Property Placeholder</p>
+                            </div>
+                        </div>
+                        <a class="action-button add-button" onclick="showAddPropertyPopup()">Add Property</a>
+                        <div id="addPropertyPopup" class="popup">
+                            <div class="popup-content">
+                                <span class="close-button" onclick="hideAddPropertyPopup()">&times;</span>
+                                <h2>Add New Property</h2>
+                                <p>Add Property Placeholder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="properties-table-container">
+                    <table class="properties-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Property Name</th>
+                                <th>Address</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- This will be populated with data from the database -->
+                            <tr>
+                                <td>1</td>
+                                <td>Modern Apartment</td>
+                                <td>123 Main St, City</td>
+                                <td>$350,000</td>
+                                <td>Apartment</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Luxury Villa</td>
+                                <td>456 Park Ave, Town</td>
+                                <td>$1,200,000</td>
+                                <td>House</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Downtown Condo</td>
+                                <td>789 High St, Metro</td>
+                                <td>$450,000</td>
+                                <td>Condo</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Suburban Townhouse</td>
+                                <td>101 Suburb Lane, County</td>
+                                <td>$275,000</td>
+                                <td>Townhouse</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Beachfront Villa</td>
+                                <td>1 Ocean View Dr, Coast</td>
+                                <td>$2,500,000</td>
+                                <td>Villa</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Country Estate</td>
+                                <td>100 Country Rd, Rural</td>
+                                <td>$1,800,000</td>
+                                <td>Estate</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Urban Loft</td>
+                                <td>200 Industrial Ave, Downtown</td>
+                                <td>$525,000</td>
+                                <td>Loft</td>
+                                <td>For Sale</td>
+                            </tr> 
+                            <tr>
+                                <td>8</td>
+                                <td>Mountain Cabin</td>
+                                <td>300 Forest Rd, Mountains</td>
+                                <td>$750,000</td>
+                                <td>Cabin</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>City Penthouse</td>
+                                <td>500 Skyline Blvd, Downtown</td>
+                                <td>$1,500,000</td>
+                                <td>Penthouse</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Lakefront Cottage</td>
+                                <td>200 Lakeview Dr, Lakeside</td>
+                                <td>$450,000</td>
+                                <td>Cottage</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>Historic Mansion</td>
+                                <td>700 Heritage Ln, Old Town</td>
+                                <td>$3,000,000</td>
+                                <td>Mansion</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>Golf Course Villa</td>
+                                <td>400 Fairway Dr, Country Club</td>
+                                <td>$1,200,000</td>
+                                <td>Villa</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>Riverside Bungalow</td>
+                                <td>600 River Rd, Riverside</td>
+                                <td>$350,000</td>
+                                <td>Bungalow</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>Seaside Condo</td>
+                                <td>800 Ocean Dr, Beachfront</td>
+                                <td>$600,000</td>
+                                <td>Condo</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>Farmhouse</td>
+                                <td>900 Farm Rd, Countryside</td>
+                                <td>$500,000</td>
+                                <td>Farmhouse</td>
+                                <td>For Sale</td>
+                            </tr>
+                            <!-- Placerholder -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="bg-image"></div>
+        </div>
+    </div>
+<script>
+    // Show/hide filter popup
+    function showPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+    function hidePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+
+    // Show/hide add property popup
+    function showAddPropertyPopup() {
+        document.getElementById("addPropertyPopup").style.display = "block";
+    }
+    function hideAddPropertyPopup() {
+        document.getElementById("addPropertyPopup").style.display = "none";
+    }
+
+    // Close popups when clicking outside
+    document.addEventListener('click', function(event) {
+        const popups = ['popup', 'addPropertyPopup'];
+        popups.forEach(popupId => {
+            const popup = document.getElementById(popupId);
+            const popupContent = popup.querySelector('.popup-content');
+            if (popup.style.display === "block" && 
+                !popupContent.contains(event.target) && 
+                !event.target.classList.contains('select-button') && 
+                !event.target.classList.contains('add-button')) {
+                popup.style.display = "none";
+            }
+        });
+    });
+</script>
+</body>
+</html>
