@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome - Spring Real Estate</title>
-  <link rel="stylesheet" th:href="@{/css/welcome.css}" />
+  <link rel="stylesheet" th:href="@{/css/home.css}" />
 </head>
 <body>
     <div class="decorative-box">
@@ -13,14 +13,14 @@
             <div class="nav-left">
             <div class="logo">
                 <span class="logo-circle"></span>
-                <a th:href="@{/welcome}" class="company-text-link">
+                <a th:href="@{/home}" class="company-text-link">
                     <span class="company-text">Spring Real Estate</span>
                 </a>
             </div>
             </div>
             <div class="nav-right">
             <ul class="nav-links">
-                <li><a th:href="@{/home}">Home</a></li>
+                <li><a th:href="@{/home}" class="active-link">Home</a></li>
                 <li><a th:href="@{/properties}">Properties</a></li>
                 <li><a th:href="@{/about}">About us</a></li>
             </ul>

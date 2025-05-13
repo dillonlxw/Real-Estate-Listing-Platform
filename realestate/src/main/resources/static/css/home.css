@@ -118,7 +118,7 @@ nav {
 /* Background image container fills remaining space */
 .bg-image {
   flex-grow: 1;
-  background: url('/images/welcomepageBG.png') no-repeat center center;
+  background: url('/images/homepageBG.png') no-repeat center center;
   background-size: cover;
 }
 
