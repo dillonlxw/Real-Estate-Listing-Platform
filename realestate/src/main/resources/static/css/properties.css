@@ -1,14 +1,16 @@
+/* realestate/src/main/resources/static/css/properties.css */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ... existing body, .decorative-box, nav styles ... */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    /* Allow body to scroll if popup content is too large, but keep main page fixed */
 }
 
 body {
@@ -19,8 +21,10 @@ body {
 /* Container for entire content */
 .decorative-box {
   width: 100%;
-  height: 100%;
+  min-height: 100vh; /* Use min-height to ensure it covers viewport */
   box-sizing: border-box;
+  display: flex; /* Use flex to manage layout */
+  flex-direction: column; /* Stack nav and page-container */
 }
 
 /* Navigation Bar */
@@ -30,10 +34,11 @@ nav {
   align-items: center;
   padding: 1rem 2rem;
   background-color: #ffffff;
-  position: relative;
+  position: relative; /* Changed from sticky/fixed for simplicity with full page scroll */
   z-index: 20;
   height: 70px;
   box-sizing: border-box;
+  flex-shrink: 0; /* Prevent nav from shrinking */
 }
 .nav-left .logo {
   display: flex;
@@ -125,18 +130,20 @@ nav {
   }
 }
 
+
 .page-container {
   display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 70px);
+  flex-direction: column; /* This might be redundant if .decorative-box is already column */
+  /* min-height: calc(100vh - 70px); */ /* Let decorative-box handle overall height */
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden; */ /* Removed to allow main page to scroll if content overflows, useful for small screens */
+  flex-grow: 1; /* Allow page-container to take remaining space */
 }
 
 /* Properties message container */
 .properties-wrapper {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent for readability */
+  padding: 20px 30px; /* Adjusted padding */
   width: 90%;
   max-width: 1000px;
   position: absolute;
@@ -146,11 +153,12 @@ nav {
   box-sizing: border-box;
   text-align: left;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
   z-index: 10;
   display: flex;
   flex-direction: column;
-  height: 80vh;
+  height: 80vh; /* Max height */
+  max-height: 700px; /* Absolute max height */
 }
 
 /* Header section with title and buttons */
@@ -161,6 +169,7 @@ nav {
   margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 15px;
+  flex-shrink: 0; /* Prevent header from shrinking */
 }
 
 .properties-header h1 {
@@ -185,6 +194,7 @@ nav {
   font-weight: 500;
   transition: all 0.3s ease;
   text-align: center;
+  cursor: pointer; /* Make it clear it's clickable */
 }
 
 /* Add button - for adding new properties */
@@ -199,18 +209,30 @@ nav {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+.select-button { /* For Filter button */
+  background-color: #2196F3;
+  color: white;
+  border: 1px solid #2196F3;
+}
+
+.select-button:hover {
+  background-color: #0b7dda;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 /* Table container */
 .properties-table-container {
-  overflow-y: auto;
-  height: 100%;
-  min-height: 400px;
+  overflow-y: auto; /* Make table scrollable within the wrapper */
+  flex-grow: 1; /* Allow table container to take available space */
+  /* height: 100%; */ /* This might conflict with flex-grow, removed */
+  /* min-height: 400px; */ /* Removed, let flexbox handle it */
 }
 
 /* Table styling */
 .properties-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  /* margin-top: 10px; */ /* Removed, header has margin-bottom */
 }
 
 .properties-table th,
@@ -218,6 +240,7 @@ nav {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  font-size: 0.9rem; /* Slightly smaller font for table content */
 }
 
 .properties-table th {
@@ -225,7 +248,8 @@ nav {
   font-weight: bold;
   color: #333;
   position: sticky;
-  top: 0;
+  top: 0; /* Sticky header for scrollable table */
+  z-index: 5; /* Ensure header is above table rows during scroll */
 }
 
 .properties-table tr:hover {
@@ -239,81 +263,59 @@ nav {
 /* Background image container */
 .bg-image {
   position: fixed;
-  top: 70px; /* Position right below the nav bar */
+  top: 0; /* Cover entire viewport behind everything else */
   left: 0;
   width: 100%;
-  height: calc(100% - 70px);
+  height: 100%;
   background: url('/images/propertiespageBG.png') no-repeat center center;
   background-size: cover;
-  z-index: 1;
+  z-index: 1; /* Behind .properties-wrapper and nav */
+  opacity: 0.8; /* Slightly reduce opacity */
 }
 
-/* Action buttons container */
-.action-buttons {
-  display: flex;
-  gap: 10px;
-}
 
-/* Button styling */
-.action-button {
-  display: inline-block;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  text-decoration: none;
-  border-radius: 4px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-/* Add button - for adding new properties */
-.add-button {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #4CAF50;
-}
-
-.add-button:hover {
-  background-color: #45a049;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.select-button {
-  background-color: #2196F3;
-  color: white;
-  border: 1px solid #2196F3;
-}
-
-.select-button:hover {
-  background-color: #0b7dda;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
+/* Popup base style */
 .popup {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 30; /* Higher than nav and properties-wrapper */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Enable scroll if needed for popup content itself */
+  background-color: rgba(0,0,0,0.5); /* Slightly darker overlay */
+  padding-top: 60px; /* Space from top */
 }
 
 .popup-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  margin: 5% auto; /* Centered, with some margin from top */
+  padding: 25px;
+  border: 1px solid #ccc;
+  width: 90%;
+  max-width: 500px; /* Max width for popup content */
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
 .close-button {
   color: #aaa;
-  float: right;
+  position: absolute; /* Position relative to popup-content */
+  top: 10px;
+  right: 15px;
   font-size: 28px;
   font-weight: bold;
+  line-height: 1;
 }
 
 .close-button:hover,
@@ -323,6 +325,58 @@ nav {
   cursor: pointer;
 }
 
-.show {
-  display: block; /* Show the popup */
+/* Filter Form Specific Styles */
+.filter-form .form-group {
+  margin-bottom: 20px;
+}
+
+.filter-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.filter-form .price-slider {
+  width: 100%;
+  cursor: pointer;
+}
+/* Customize slider appearance (optional, browser-specific) */
+.price-slider::-webkit-slider-thumb { /* Chrome, Opera, Safari, Edge */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: #2196F3;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.price-slider::-moz-range-thumb { /* Firefox */
+  width: 18px;
+  height: 18px;
+  background: #2196F3;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+
+.filter-form label span { /* For minPriceValue, maxPriceValue */
+  font-weight: bold;
+  color: #333;
+}
+
+.apply-filter-button {
+  background-color: #5cb85c; /* Green for apply */
+  color: white;
+  border: 1px solid #4cae4c;
+  padding: 10px 20px;
+  font-size: 1rem;
+  width: 100%; /* Make button full width in popup */
+  margin-top: 10px; /* Space above button */
+}
+
+.apply-filter-button:hover {
+  background-color: #4cae4c;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }

@@ -1,3 +1,4 @@
+<!-- realestate/src/main/resources/templates/properties.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -10,6 +11,7 @@
     <div class="decorative-box">
         <!-- Navigation Bar -->
         <nav>
+            <!-- ... existing nav bar ... -->
             <div class="nav-left">
             <div class="logo">
                 <span class="logo-circle"></span>
@@ -32,25 +34,47 @@
                 <div class="properties-header">
                     <h1 th:text="${propertiesMessage}">Properties</h1>
                     <div class="action-buttons">
-                        <a class="action-button select-button" onclick="showPopup()">Filter</a>
-                        <div id="popup" class="popup">
+                        <a class="action-button select-button" onclick="showPopup('filterPopup')">Filter</a>
+                        <!-- Filter Popup -->
+                        <div id="filterPopup" class="popup">
                             <div class="popup-content">
-                                <span class="close-button" onclick="hidePopup()">&times;</span>
-                                <h2>Filter Property</h2>
-                                <p>Filter Property Placeholder</p> <!-- TODO: Implement filter form -->
+                                <span class="close-button" onclick="hidePopup('filterPopup')">×</span>
+                                <h2>Filter Properties</h2>
+                                <form th:action="@{/properties}" method="get" class="filter-form">
+                                    <div class="form-group">
+                                        <label for="minPrice">Min Price: <span id="minPriceValue" th:text="${#numbers.formatCurrency(currentMinPrice)}">$0</span></label>
+                                        <input type="range" id="minPrice" name="minPrice"
+                                               th:min="0"
+                                               th:max="${maxOverallPrice}"
+                                               th:value="${currentMinPrice}"
+                                               step="1000" class="price-slider">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="maxPrice">Max Price: <span id="maxPriceValue" th:text="${#numbers.formatCurrency(currentMaxPrice)}">$5,000,000</span></label>
+                                        <input type="range" id="maxPrice" name="maxPrice"
+                                               th:min="0"
+                                               th:max="${maxOverallPrice}"
+                                               th:value="${currentMaxPrice}"
+                                               step="1000" class="price-slider">
+                                    </div>
+                                    <button type="submit" class="action-button apply-filter-button">Apply Filter</button>
+                                </form>
                             </div>
                         </div>
-                        <a class="action-button add-button" onclick="showAddPropertyPopup()">Add Property</a>
+                        <a class="action-button add-button" onclick="showPopup('addPropertyPopup')">Add Property</a>
+                        <!-- Add Property Popup -->
                         <div id="addPropertyPopup" class="popup">
                             <div class="popup-content">
-                                <span class="close-button" onclick="hideAddPropertyPopup()">&times;</span>
+                                <span class="close-button" onclick="hidePopup('addPropertyPopup')">×</span>
                                 <h2>Add New Property</h2>
-                                <p>Add Property Placeholder</p> <!-- TODO: Implement add form -->
+                                <p>Add Property Form Placeholder</p> <!-- TODO: Implement add form -->
+                                <!-- Example: <form>...</form> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="properties-table-container">
+                    <!-- ... existing table ... -->
                     <table class="properties-table">
                         <thead>
                             <tr>
@@ -65,7 +89,7 @@
                         <tbody>
                             <!-- Iterate over properties -->
                             <tr th:if="${properties.isEmpty()}">
-                                <td colspan="6" style="text-align: center;">No properties available.</td>
+                                <td colspan="6" style="text-align: center;">No properties available for the selected criteria.</td>
                             </tr>
                             <tr th:each="property : ${properties}">
                                 <td th:text="${property.id}">1</td>
@@ -82,35 +106,87 @@
             <div class="bg-image"></div>
         </div>
     </div>
-<script>
-    // Show/hide filter popup
-    function showPopup() {
-        document.getElementById("popup").style.display = "block";
+<script th:inline="javascript">
+    // JavaScript for popups and price range sliders
+    const maxOverallPrice = /*[[${maxOverallPrice}]]*/ 5000000; // Default from Thymeleaf
+
+    // Show/hide generic popup
+    function showPopup(popupId) {
+        const popup = document.getElementById(popupId);
+        if (popup) popup.style.display = "block";
     }
-    function hidePopup() {
-        document.getElementById("popup").style.display = "none";
+    function hidePopup(popupId) {
+        const popup = document.getElementById(popupId);
+        if (popup) popup.style.display = "none";
     }
 
-    // Show/hide add property popup
-    function showAddPropertyPopup() {
-        document.getElementById("addPropertyPopup").style.display = "block";
+    // Price Range Slider Logic
+    const minPriceSlider = document.getElementById('minPrice');
+    const maxPriceSlider = document.getElementById('maxPrice');
+    const minPriceValueDisplay = document.getElementById('minPriceValue');
+    const maxPriceValueDisplay = document.getElementById('maxPriceValue');
+
+    // Attempt to get locale and currency from browser/document, fallback to en-US/USD
+    const userLocale = document.documentElement.lang || navigator.language || 'en-US';
+    // A simple currency map or a more robust solution might be needed for real multi-currency
+    const defaultCurrency = 'USD'; // Fallback currency
+
+    const currencyFormatter = new Intl.NumberFormat(userLocale, {
+        style: 'currency',
+        currency: defaultCurrency, // Consider making this dynamic if app supports multiple currencies
+        minimumFractionDigits: 0, // Adjust as needed
+        maximumFractionDigits: 0  // Adjust as needed
+    });
+
+    function updatePriceDisplay(value, displayElement) {
+        if (displayElement) {
+            displayElement.textContent = currencyFormatter.format(value);
+        }
     }
-    function hideAddPropertyPopup() {
-        document.getElementById("addPropertyPopup").style.display = "none";
+
+    if (minPriceSlider && maxPriceSlider && minPriceValueDisplay && maxPriceValueDisplay) {
+        // Initialize display values based on current slider values
+        updatePriceDisplay(minPriceSlider.value, minPriceValueDisplay);
+        updatePriceDisplay(maxPriceSlider.value, maxPriceValueDisplay);
+
+        minPriceSlider.addEventListener('input', function() {
+            let minValue = parseFloat(this.value);
+            let maxValue = parseFloat(maxPriceSlider.value);
+            if (minValue > maxValue) {
+                maxPriceSlider.value = minValue;
+                updatePriceDisplay(minValue, maxPriceValueDisplay);
+            }
+            updatePriceDisplay(minValue, minPriceValueDisplay);
+        });
+
+        maxPriceSlider.addEventListener('input', function() {
+            let maxValue = parseFloat(this.value);
+            let minValue = parseFloat(minPriceSlider.value);
+            if (maxValue < minValue) {
+                minPriceSlider.value = maxValue;
+                updatePriceDisplay(maxValue, minPriceValueDisplay);
+            }
+            updatePriceDisplay(maxValue, maxPriceValueDisplay);
+        });
     }
 
     // Close popups when clicking outside
     document.addEventListener('click', function(event) {
-        const popups = ['popup', 'addPropertyPopup'];
+        const popups = ['filterPopup', 'addPropertyPopup'];
         popups.forEach(popupId => {
             const popup = document.getElementById(popupId);
-            if (popup) { // Check if popup element exists
+            if (popup && popup.style.display === "block") {
                 const popupContent = popup.querySelector('.popup-content');
-                 if (popup.style.display === "block" && 
-                    popupContent && !popupContent.contains(event.target) && 
-                    !event.target.classList.contains('select-button') && 
-                    !event.target.classList.contains('add-button')) {
-                    popup.style.display = "none";
+                // Check if the click is outside the popup content AND not on a button that opens this popup
+                let isOpeningButton = false;
+                if (popupId === 'filterPopup' && event.target.classList.contains('select-button')) {
+                    isOpeningButton = true;
+                } else if (popupId === 'addPropertyPopup' && event.target.classList.contains('add-button')) {
+                    isOpeningButton = true;
+                }
+
+                if (popupContent && !popupContent.contains(event.target) && !isOpeningButton) {
+                    hidePopup(popupId);
                 }
             }
         });
