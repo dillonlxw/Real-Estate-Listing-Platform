@@ -37,7 +37,7 @@
                             <div class="popup-content">
                                 <span class="close-button" onclick="hidePopup()">&times;</span>
                                 <h2>Filter Property</h2>
-                                <p>Filter Property Placeholder</p>
+                                <p>Filter Property Placeholder</p> <!-- TODO: Implement filter form -->
                             </div>
                         </div>
                         <a class="action-button add-button" onclick="showAddPropertyPopup()">Add Property</a>
@@ -45,7 +45,7 @@
                             <div class="popup-content">
                                 <span class="close-button" onclick="hideAddPropertyPopup()">&times;</span>
                                 <h2>Add New Property</h2>
-                                <p>Add Property Placeholder</p>
+                                <p>Add Property Placeholder</p> <!-- TODO: Implement add form -->
                             </div>
                         </div>
                     </div>
@@ -63,128 +63,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- This will be populated with data from the database -->
-                            <tr>
-                                <td>1</td>
-                                <td>Modern Apartment</td>
-                                <td>123 Main St, City</td>
-                                <td>$350,000</td>
-                                <td>Apartment</td>
-                                <td>For Sale</td>
+                            <!-- Iterate over properties -->
+                            <tr th:if="${properties.isEmpty()}">
+                                <td colspan="6" style="text-align: center;">No properties available.</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Luxury Villa</td>
-                                <td>456 Park Ave, Town</td>
-                                <td>$1,200,000</td>
-                                <td>House</td>
-                                <td>For Sale</td>
+                            <tr th:each="property : ${properties}">
+                                <td th:text="${property.id}">1</td>
+                                <td th:text="${property.propertyName}">Modern Apartment</td>
+                                <td th:text="${property.address}">123 Main St, City</td>
+                                <td th:text="${#numbers.formatCurrency(property.price)}">$350,000</td>
+                                <td th:text="${property.type}">Apartment</td>
+                                <td th:text="${property.status}">For Sale</td>
                             </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Downtown Condo</td>
-                                <td>789 High St, Metro</td>
-                                <td>$450,000</td>
-                                <td>Condo</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>Suburban Townhouse</td>
-                                <td>101 Suburb Lane, County</td>
-                                <td>$275,000</td>
-                                <td>Townhouse</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>Beachfront Villa</td>
-                                <td>1 Ocean View Dr, Coast</td>
-                                <td>$2,500,000</td>
-                                <td>Villa</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>Country Estate</td>
-                                <td>100 Country Rd, Rural</td>
-                                <td>$1,800,000</td>
-                                <td>Estate</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>Urban Loft</td>
-                                <td>200 Industrial Ave, Downtown</td>
-                                <td>$525,000</td>
-                                <td>Loft</td>
-                                <td>For Sale</td>
-                            </tr> 
-                            <tr>
-                                <td>8</td>
-                                <td>Mountain Cabin</td>
-                                <td>300 Forest Rd, Mountains</td>
-                                <td>$750,000</td>
-                                <td>Cabin</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>City Penthouse</td>
-                                <td>500 Skyline Blvd, Downtown</td>
-                                <td>$1,500,000</td>
-                                <td>Penthouse</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>Lakefront Cottage</td>
-                                <td>200 Lakeview Dr, Lakeside</td>
-                                <td>$450,000</td>
-                                <td>Cottage</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td>Historic Mansion</td>
-                                <td>700 Heritage Ln, Old Town</td>
-                                <td>$3,000,000</td>
-                                <td>Mansion</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td>Golf Course Villa</td>
-                                <td>400 Fairway Dr, Country Club</td>
-                                <td>$1,200,000</td>
-                                <td>Villa</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td>Riverside Bungalow</td>
-                                <td>600 River Rd, Riverside</td>
-                                <td>$350,000</td>
-                                <td>Bungalow</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>14</td>
-                                <td>Seaside Condo</td>
-                                <td>800 Ocean Dr, Beachfront</td>
-                                <td>$600,000</td>
-                                <td>Condo</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <tr>
-                                <td>15</td>
-                                <td>Farmhouse</td>
-                                <td>900 Farm Rd, Countryside</td>
-                                <td>$500,000</td>
-                                <td>Farmhouse</td>
-                                <td>For Sale</td>
-                            </tr>
-                            <!-- Placerholder -->
                         </tbody>
                     </table>
                 </div>
@@ -214,12 +104,14 @@
         const popups = ['popup', 'addPropertyPopup'];
         popups.forEach(popupId => {
             const popup = document.getElementById(popupId);
-            const popupContent = popup.querySelector('.popup-content');
-            if (popup.style.display === "block" && 
-                !popupContent.contains(event.target) && 
-                !event.target.classList.contains('select-button') && 
-                !event.target.classList.contains('add-button')) {
-                popup.style.display = "none";
+            if (popup) { // Check if popup element exists
+                const popupContent = popup.querySelector('.popup-content');
+                 if (popup.style.display === "block" && 
+                    popupContent && !popupContent.contains(event.target) && 
+                    !event.target.classList.contains('select-button') && 
+                    !event.target.classList.contains('add-button')) {
+                    popup.style.display = "none";
+                }
             }
         });
     });
