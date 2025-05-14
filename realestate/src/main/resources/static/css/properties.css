@@ -366,6 +366,39 @@ nav {
   color: #333;
 }
 
+/* Styles for Status Filter Radio Buttons */
+.status-filter-options {
+  /* Removed: display: flex; gap: 15px; */
+  /* This div will now just be a container for vertically stacked options */
+}
+
+.status-option {
+  display: flex; /* Align radio button and label on the same line */
+  align-items: center; /* Vertically center them if their heights differ */
+  margin-bottom: 8px; /* Space between each status option */
+}
+
+.status-option:last-child {
+  margin-bottom: 0; /* No margin for the last option */
+}
+
+.status-option input[type="radio"] {
+  margin-right: 8px; /* Space between the radio button and its label text */
+  accent-color: #2196F3; /* Modern way to color radio/checkbox */
+  /* Add any other specific styling for the radio button itself */
+  /* For example, to increase size if needed: */
+  /* width: 16px; */
+  /* height: 16px; */
+}
+
+.status-option label {
+  margin-bottom: 0; /* Override default label margin from .filter-form label */
+  font-weight: normal; /* Normal weight for radio labels */
+  color: #333;
+  cursor: pointer;
+}
+
+
 .apply-filter-button {
   background-color: #5cb85c; /* Green for apply */
   color: white;
