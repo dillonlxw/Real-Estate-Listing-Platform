@@ -3,17 +3,20 @@ package com.myrealestate.realestate.controller;
 import com.myrealestate.realestate.model.Property;
 import com.myrealestate.realestate.repository.PropertyRepository;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute; // Added
-import org.springframework.web.bind.annotation.PostMapping; // Added
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; // Added for potential success messages
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class propertiesController {
@@ -32,8 +35,11 @@ public class propertiesController {
             @RequestParam(name = "maxPrice", required = false) BigDecimal maxPrice,
             @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "sortOrder", required = false, defaultValue = "default") String sortOrder,
-            Model model) {
+            Model model, RedirectAttributes redirectAttributes) {
 
+        if (redirectAttributes.getFlashAttributes().containsKey("globalSuccessMessage")) {
+            model.addAttribute("globalSuccessMessage", redirectAttributes.getFlashAttributes().get("globalSuccessMessage"));
+        }
         BigDecimal maxDbPrice = propertyRepository.findMaxPrice();
         BigDecimal overallMaxPrice;
 
@@ -83,25 +89,37 @@ public class propertiesController {
         model.addAttribute("currentStatus", (hasStatusFilter) ? status : "");
         model.addAttribute("currentSortOrder", sortOrder);
 
-        // Add an empty Property object for the "Add Property" form
-        if (!model.containsAttribute("newProperty")) { // Check if not already added by a redirect
+        if (!model.containsAttribute("newProperty")) {
             model.addAttribute("newProperty", new Property());
         }
-
         return "properties";
     }
 
     @PostMapping("/properties/add")
     public String addProperty(@ModelAttribute("newProperty") Property property, RedirectAttributes redirectAttributes) {
-        // Basic validation example (can be enhanced with @Valid and BindingResult)
+        // ... (existing add property logic, ensure it's complete as per previous steps) ...
         if (property.getPropertyName() == null || property.getPropertyName().trim().isEmpty() ||
             property.getAddress() == null || property.getAddress().trim().isEmpty() ||
             property.getPrice() == null || property.getPrice().compareTo(BigDecimal.ZERO) < 0 ||
             property.getType() == null || property.getType().trim().isEmpty() ||
             property.getStatus() == null || property.getStatus().trim().isEmpty()) {
+             // Basic validation or rely on HTML5 'required'
         }
         
         propertyRepository.save(property);
-        return "redirect:/properties"; // Redirect to the properties list page
+        redirectAttributes.addFlashAttribute("globalSuccessMessage", "Property added successfully!");
+        return "redirect:/properties";
+    }
+
+    @PostMapping("/properties/action/complete/{id}") // Renamed and made more generic
+    public ResponseEntity<?> completePropertyAction(@PathVariable("id") Long id) {
+        if (!propertyRepository.existsById(id)) {
+            return ResponseEntity.status(404).body(Map.of("error", "Property not found."));
+        }
+
+        // The action is to remove the property from the list (delete)
+        propertyRepository.deleteById(id);
+        // Client-side will handle dynamic success message ("Rent successful" vs "Purchase successful")
+        return ResponseEntity.ok(Map.of("message", "Property action completed successfully."));
     }
 }

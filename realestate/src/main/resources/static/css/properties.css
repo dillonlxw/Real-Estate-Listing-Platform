@@ -321,6 +321,15 @@ nav {
   border-bottom: none;
 }
 
+/* Updated class name */
+.properties-table tbody tr.clickable-property-row {
+  cursor: pointer;
+}
+
+.properties-table tbody tr.clickable-property-row:hover {
+  background-color: #e9f5ff; /* Light blue hover for clickable rows */
+}
+
 /* Background image container */
 .bg-image {
   position: fixed;
@@ -337,43 +346,33 @@ nav {
 
 /* Popup base style */
 .popup {
-  /* display is managed by JS: 'none' or 'flex' */
   display: none;
-  position: fixed; /* Stay in place */
-  z-index: 30; /* Higher than nav and properties-wrapper */
+  position: fixed;
+  z-index: 30;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5); /* Slightly darker overlay */
-
-  /* Flexbox for centering popup-content */
-  justify-content: center; /* Horizontally center */
-  align-items: center; /* Vertically center */
-
-  /* If popup content (centered by flex) is taller than viewport, make the popup overlay scrollable */
-  overflow-y: auto; /* Allows scrolling of the overlay if content is too tall */
-  /* padding-top: 60px; // Removed, flexbox handles centering */
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
 }
 
 .popup-content {
   background-color: #fefefe;
-  /* margin: 5% auto; // Removed, flexbox on parent .popup handles centering */
   padding: 25px;
   border: 1px solid #ccc;
   width: 90%;
-  max-width: 500px; /* Max width for popup content */
+  max-width: 500px;
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  position: relative; /* For positioning the close button */
-  /* The popup content itself should not have its own scrollbars.
-     It will expand vertically to fit its content.
-     If it becomes taller than the viewport, the parent .popup (the overlay)
-     will scroll due to its overflow-y: auto. */
-  /* To give the popup content a max height and make IT scrollable instead of the overlay:
-  max-height: 85vh;
-  overflow-y: auto;
-  */
+  position: relative;
+}
+
+.popup-content.popup-small {
+    max-width: 380px;
+    padding: 20px;
 }
 
 .popup-content h2 {
@@ -382,11 +381,25 @@ nav {
   color: #333;
   border-bottom: 1px solid #eee;
   padding-bottom: 10px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+#actionConfirmPopup .popup-content h2, /* Target specific popup for title styling */
+#actionSuccessPopup .popup-content h2 { /* Target specific popup for title styling */
+    border-bottom: none;
+    padding-bottom: 0;
+}
+#actionConfirmPopup .popup-content h2 {  /* Specific margin for confirm title */
+    margin-bottom: 10px;
+}
+#actionSuccessPopup .popup-content h2 { /* Specific margin for success title */
+     margin-bottom: 0;
 }
 
 .close-button {
   color: #aaa;
-  position: absolute; /* Position relative to popup-content */
+  position: absolute;
   top: 10px;
   right: 15px;
   font-size: 28px;
@@ -401,14 +414,53 @@ nav {
   cursor: pointer;
 }
 
-/* Filter Form Specific Styles (can be shared/adapted for Add Property Form) */
+.popup-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 15px;
+}
+
+.popup-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+.popup-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.button-no {
+  background-color: #dc3545;
+  color: white;
+}
+.button-no:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.button-yes {
+  background-color: #28a745;
+  color: white;
+}
+.button-yes:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+/* Form styles */
 .filter-form .form-group,
-.add-property-form .form-group { /* Apply to both forms */
+.add-property-form .form-group {
   margin-bottom: 15px;
 }
 
 .filter-form label,
-.add-property-form label { /* Apply to both forms */
+.add-property-form label {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
@@ -420,7 +472,7 @@ nav {
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   font-size: 0.9rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -482,14 +534,14 @@ nav {
 }
 
 
-.apply-filter-button { 
-  background-color: #5cb85c; 
+.apply-filter-button {
+  background-color: #5cb85c;
   color: white;
   border: 1px solid #4cae4c;
   padding: 10px 20px;
   font-size: 1rem;
-  width: 100%; 
-  margin-top: 10px; 
+  width: 100%;
+  margin-top: 10px;
   cursor: pointer;
 }
 
@@ -509,4 +561,22 @@ nav {
 
 .form-control::-ms-input-placeholder { 
  color: #999;
+}
+
+.alert {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
 }

@@ -26,9 +26,14 @@
             </ul>
             </div>
         </nav>
+
         <!-- Properties content -->
         <div class="page-container">
             <div class="properties-wrapper">
+                <!-- Global Success/Error Messages -->
+                <div th:if="${globalSuccessMessage}" class="alert alert-success" th:text="${globalSuccessMessage}"></div>
+                <!-- ... (other messages if needed) ... -->
+
                 <div class="properties-header">
                     <h1 th:text="${propertiesMessage}">Properties</h1>
                     <div class="action-buttons">
@@ -46,12 +51,12 @@
                         </div>
                         <a class="action-button select-button" onclick="showPopup('filterPopup')">Filter</a>
                         <!-- Filter Popup -->
-                        <div id="filterPopup" class="popup">
+                        <div id="filterPopup" class="popup" data-backdrop-close="true">
                             <div class="popup-content">
                                 <span class="close-button" onclick="hidePopup('filterPopup')">×</span>
                                 <h2>Filter Properties</h2>
                                 <form th:action="@{/properties}" method="get" class="filter-form">
-                                    <input type="hidden" name="sortOrder" th:value="${currentSortOrder}" /> <!-- Preserve sort order -->
+                                    <input type="hidden" name="sortOrder" th:value="${currentSortOrder}" />
                                     <div class="form-group">
                                         <label for="minPrice">Min Price: <span id="minPriceValue" th:text="${#numbers.formatCurrency(currentMinPrice)}">$0</span></label>
                                         <input type="range" id="minPrice" name="minPrice"
@@ -91,11 +96,10 @@
                         </div>
                         <a class="action-button add-button" onclick="showPopup('addPropertyPopup')">Add Property</a>
                         <!-- Add Property Popup -->
-                        <div id="addPropertyPopup" class="popup">
+                        <div id="addPropertyPopup" class="popup" data-backdrop-close="true">
                             <div class="popup-content">
                                 <span class="close-button" onclick="hidePopup('addPropertyPopup')">×</span>
                                 <h2>Add New Property</h2>
-                                <!-- Add Property Form -->
                                 <form th:action="@{/properties/add}" th:object="${newProperty}" method="post" class="add-property-form">
                                     <div class="form-group">
                                         <label for="addPropertyName">Property Name:</label>
@@ -142,7 +146,11 @@
                             <tr th:if="${properties.isEmpty()}">
                                 <td colspan="5" style="text-align: center;">No properties available for the selected criteria.</td>
                             </tr>
-                            <tr th:each="property : ${properties}">
+                            <tr th:each="property : ${properties}"
+                                th:data-property-id="${property.id}"
+                                th:data-property-name="${property.propertyName}"
+                                th:data-property-status="${property.status}"
+                                th:classappend="(${property.status.equalsIgnoreCase('Rent')} or ${property.status.equalsIgnoreCase('Sale')}) ? 'clickable-property-row' : ''">
                                 <td th:text="${property.propertyName}">Modern Apartment</td>
                                 <td th:text="${property.address}">123 Main St, City</td>
                                 <td th:text="${#numbers.formatCurrency(property.price)}">$350,000</td>
@@ -155,17 +163,38 @@
             </div>
             <div class="bg-image"></div>
         </div>
+
+        <!-- Action Confirmation Popup -->
+        <div id="actionConfirmPopup" class="popup" data-backdrop-close="false">
+            <div class="popup-content popup-small">
+                <h2 id="actionConfirmTitle">Confirm Action?</h2> <!-- Dynamic Title -->
+                <p id="actionConfirmPropertyName" style="text-align: center; margin-bottom: 20px;"></p>
+                <div class="popup-actions">
+                    <button id="actionConfirmNoButton" class="popup-button button-no">No</button>
+                    <button id="actionConfirmYesButton" class="popup-button button-yes">Yes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Success Popup -->
+        <div id="actionSuccessPopup" class="popup" data-backdrop-close="true">
+            <div class="popup-content popup-small">
+                <span class="close-button" onclick="hidePopupAndRefresh('actionSuccessPopup')">×</span> <!-- Modified onclick -->
+                <h2 id="actionSuccessMessage">Action successful!</h2> <!-- Dynamic Message -->
+            </div>
+        </div>
     </div>
+
 <script th:inline="javascript">
-    // JavaScript for popups, price range sliders, and dropdown
     const maxOverallPrice = /*[[${maxOverallPrice}]]*/ 5000000;
-    const currentSortOrderJS = /*[[${currentSortOrder}]]*/ 'default';
+    let currentActionPropertyId = null;
+    let currentActionPropertyStatus = ''; // To store 'Sale' or 'Rent' for dynamic messages
 
     function showPopup(popupId) {
         const popup = document.getElementById(popupId);
         if (popup) {
-            popup.style.display = "flex"; // Use flex for centering
-            document.body.style.overflow = 'hidden'; // Prevent body from scrolling
+            popup.style.display = "flex";
+            document.body.style.overflow = 'hidden';
         }
     }
 
@@ -173,16 +202,34 @@
         const popup = document.getElementById(popupId);
         if (popup) {
              popup.style.display = "none";
-             document.body.style.overflow = 'auto'; // Restore body scrolling
-             // If it's the add property form, reset it when hiding
+             // Only restore body scroll if no other popups are active
+             const anyPopupActive = Array.from(document.querySelectorAll('.popup')).some(p => p.style.display === 'flex');
+             if (!anyPopupActive) {
+                document.body.style.overflow = 'auto';
+             }
+
              if (popupId === 'addPropertyPopup') {
                 const form = popup.querySelector('.add-property-form');
-                if (form) {
-                    form.reset();
-                }
+                if (form) form.reset();
+             }
+             if (popupId === 'actionConfirmPopup') {
+                currentActionPropertyId = null;
+                currentActionPropertyStatus = '';
+                document.getElementById('actionConfirmPropertyName').textContent = '';
+                const yesButton = document.getElementById('actionConfirmYesButton');
+                const noButton = document.getElementById('actionConfirmNoButton');
+                if(yesButton) yesButton.disabled = false;
+                if(noButton) noButton.disabled = false;
              }
         }
     }
+
+    // New function to hide a popup and then refresh the page
+    function hidePopupAndRefresh(popupId) {
+        hidePopup(popupId);
+        window.location.reload(); // Reload the current page
+    }
+
 
     const minPriceSlider = document.getElementById('minPrice');
     const maxPriceSlider = document.getElementById('maxPrice');
@@ -225,7 +272,6 @@
         document.getElementById(dropdownId).classList.toggle("show-dropdown");
     }
 
-    // Close dropdown if the user clicks outside of it
     window.onclick = function(event) {
         // Close dropdown logic
         if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-toggle')) {
@@ -237,18 +283,105 @@
                 }
             }
         }
-
-        // Close popups (filter, add) if click is on the overlay
-        const popups = ['filterPopup', 'addPropertyPopup'];
-        popups.forEach(popupId => {
+        // Close popups (filter, add, success) if click is on the overlay and allowed
+        const popupsToCloseOnClickOutside = ['filterPopup', 'addPropertyPopup', 'actionSuccessPopup'];
+        popupsToCloseOnClickOutside.forEach(popupId => {
             const popup = document.getElementById(popupId);
-            // Check if the popup is currently displayed as 'flex'
-            // and if the click target is the popup overlay itself
             if (popup && popup.style.display === "flex" && event.target === popup) {
-                hidePopup(popupId);
+                 if (popup.dataset.backdropClose !== 'false') {
+                    // For actionSuccessPopup, use the new function to also refresh
+                    if (popupId === 'actionSuccessPopup') {
+                        hidePopupAndRefresh(popupId);
+                    } else {
+                        hidePopup(popupId);
+                    }
+                }
             }
         });
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const propertiesTableBody = document.querySelector('.properties-table tbody');
+        if (propertiesTableBody) {
+            propertiesTableBody.addEventListener('click', function(event) {
+                const row = event.target.closest('tr.clickable-property-row');
+                if (row) {
+                    currentActionPropertyId = row.dataset.propertyId;
+                    currentActionPropertyStatus = row.dataset.propertyStatus;
+                    const propertyName = row.dataset.propertyName;
+
+                    document.getElementById('actionConfirmPropertyName').textContent = `"${propertyName}"`;
+                    const confirmTitleEl = document.getElementById('actionConfirmTitle');
+
+                    if (currentActionPropertyStatus.toLowerCase() === 'rent') {
+                        confirmTitleEl.textContent = 'Rent now?';
+                    } else if (currentActionPropertyStatus.toLowerCase() === 'sale') {
+                        confirmTitleEl.textContent = 'Buy now?';
+                    } else {
+                        confirmTitleEl.textContent = 'Process this item?'; // Fallback
+                    }
+                    showPopup('actionConfirmPopup');
+                }
+            });
+        }
+
+        const actionConfirmNoButton = document.getElementById('actionConfirmNoButton');
+        if (actionConfirmNoButton) {
+            actionConfirmNoButton.addEventListener('click', function() {
+                hidePopup('actionConfirmPopup');
+            });
+        }
+
+        const actionConfirmYesButton = document.getElementById('actionConfirmYesButton');
+        if (actionConfirmYesButton) {
+            actionConfirmYesButton.addEventListener('click', function() {
+                if (currentActionPropertyId) {
+                    actionConfirmYesButton.disabled = true;
+                    const noButton = document.getElementById('actionConfirmNoButton');
+                    if(noButton) noButton.disabled = true;
+
+
+                    fetch(`/properties/action/complete/${currentActionPropertyId}`, {
+                        method: 'POST',
+                        // headers: { 'X-CSRF-TOKEN': 'your_csrf_token_if_needed' }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(err => { throw new Error(err.error || `Server error: ${response.status}`) });
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        hidePopup('actionConfirmPopup');
+                        const rowToRemove = document.querySelector(`.properties-table tbody tr[data-property-id="${currentActionPropertyId}"]`);
+                        if (rowToRemove) {
+                            rowToRemove.remove(); // Immediate client-side removal
+                        }
+
+                        const successMessageEl = document.getElementById('actionSuccessMessage');
+                        if (currentActionPropertyStatus.toLowerCase() === 'rent') {
+                            successMessageEl.textContent = 'Rent successful!';
+                        } else if (currentActionPropertyStatus.toLowerCase() === 'sale') {
+                            successMessageEl.textContent = 'Purchase successful!';
+                        } else {
+                            successMessageEl.textContent = 'Action successful!'; // Fallback
+                        }
+                        showPopup('actionSuccessPopup');
+                        // Note: Page refresh will happen when actionSuccessPopup is closed
+                    })
+                    .catch(error => {
+                        console.error('Error processing property action:', error);
+                        alert('Failed to process action: ' + error.message);
+                        hidePopup('actionConfirmPopup'); 
+                    })
+                    .finally(() => {
+                        // Re-enable buttons (they are reset inside hidePopup for 'actionConfirmPopup')
+                        // currentActionPropertyId and currentActionPropertyStatus are reset in hidePopup
+                    });
+                }
+            });
+        }
+    });
 </script>
 </body>
 </html>
