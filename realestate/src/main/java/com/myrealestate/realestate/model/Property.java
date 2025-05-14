@@ -83,7 +83,4 @@ public class Property {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    // toString, equals, hashCode (optional but good practice)
-    // ...
 }

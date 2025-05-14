@@ -1,4 +1,3 @@
-/* realestate/src/main/resources/static/css/properties.css */
 * {
     margin: 0;
     padding: 0;
@@ -338,28 +337,43 @@ nav {
 
 /* Popup base style */
 .popup {
-  display: none; /* Hidden by default */
+  /* display is managed by JS: 'none' or 'flex' */
+  display: none;
   position: fixed; /* Stay in place */
   z-index: 30; /* Higher than nav and properties-wrapper */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; /* Enable scroll if needed for popup content itself */
   background-color: rgba(0,0,0,0.5); /* Slightly darker overlay */
-  padding-top: 60px; /* Space from top */
+
+  /* Flexbox for centering popup-content */
+  justify-content: center; /* Horizontally center */
+  align-items: center; /* Vertically center */
+
+  /* If popup content (centered by flex) is taller than viewport, make the popup overlay scrollable */
+  overflow-y: auto; /* Allows scrolling of the overlay if content is too tall */
+  /* padding-top: 60px; // Removed, flexbox handles centering */
 }
 
 .popup-content {
   background-color: #fefefe;
-  margin: 5% auto; /* Centered, with some margin from top */
+  /* margin: 5% auto; // Removed, flexbox on parent .popup handles centering */
   padding: 25px;
   border: 1px solid #ccc;
   width: 90%;
   max-width: 500px; /* Max width for popup content */
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  position: relative;
+  position: relative; /* For positioning the close button */
+  /* The popup content itself should not have its own scrollbars.
+     It will expand vertically to fit its content.
+     If it becomes taller than the viewport, the parent .popup (the overlay)
+     will scroll due to its overflow-y: auto. */
+  /* To give the popup content a max height and make IT scrollable instead of the overlay:
+  max-height: 85vh;
+  overflow-y: auto;
+  */
 }
 
 .popup-content h2 {
@@ -387,24 +401,41 @@ nav {
   cursor: pointer;
 }
 
-/* Filter Form Specific Styles */
-.filter-form .form-group {
-  margin-bottom: 20px;
+/* Filter Form Specific Styles (can be shared/adapted for Add Property Form) */
+.filter-form .form-group,
+.add-property-form .form-group { /* Apply to both forms */
+  margin-bottom: 15px;
 }
 
-.filter-form label {
+.filter-form label,
+.add-property-form label { /* Apply to both forms */
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 500;
   color: #555;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; 
+  font-size: 0.9rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .filter-form .price-slider {
   width: 100%;
   cursor: pointer;
 }
-/* Customize slider appearance (optional, browser-specific) */
-.price-slider::-webkit-slider-thumb { /* Chrome, Opera, Safari, Edge */
+.price-slider::-webkit-slider-thumb { 
   -webkit-appearance: none;
   appearance: none;
   width: 18px;
@@ -413,7 +444,7 @@ nav {
   border-radius: 50%;
   cursor: pointer;
 }
-.price-slider::-moz-range-thumb { /* Firefox */
+.price-slider::-moz-range-thumb { 
   width: 18px;
   height: 18px;
   background: #2196F3;
@@ -423,49 +454,59 @@ nav {
 }
 
 
-.filter-form label span { /* For minPriceValue, maxPriceValue */
+.filter-form label span { 
   font-weight: bold;
   color: #333;
 }
 
 .status-option {
-  display: flex; /* Align radio button and label on the same line */
-  align-items: center; /* Vertically center them if their heights differ */
-  margin-bottom: 8px; /* Space between each status option */
+  display: flex; 
+  align-items: center; 
+  margin-bottom: 8px; 
 }
 
 .status-option:last-child {
-  margin-bottom: 0; /* No margin for the last option */
+  margin-bottom: 0; 
 }
 
 .status-option input[type="radio"] {
-  margin-right: 8px; /* Space between the radio button and its label text */
-  accent-color: #2196F3; /* Modern way to color radio/checkbox */
-  /* Add any other specific styling for the radio button itself */
-  /* For example, to increase size if needed: */
-  /* width: 16px; */
-  /* height: 16px; */
+  margin-right: 8px; 
+  accent-color: #2196F3; 
 }
 
 .status-option label {
-  margin-bottom: 0; /* Override default label margin from .filter-form label */
-  font-weight: normal; /* Normal weight for radio labels */
+  margin-bottom: 0; 
+  font-weight: normal; 
   color: #333;
   cursor: pointer;
 }
 
 
-.apply-filter-button {
-  background-color: #5cb85c; /* Green for apply */
+.apply-filter-button { 
+  background-color: #5cb85c; 
   color: white;
   border: 1px solid #4cae4c;
   padding: 10px 20px;
   font-size: 1rem;
-  width: 100%; /* Make button full width in popup */
-  margin-top: 10px; /* Space above button */
+  width: 100%; 
+  margin-top: 10px; 
+  cursor: pointer;
 }
 
 .apply-filter-button:hover {
   background-color: #4cae4c;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.form-control::placeholder {
+  color: #999;
+  opacity: 1; 
+}
+
+.form-control:-ms-input-placeholder { 
+ color: #999;
+}
+
+.form-control::-ms-input-placeholder { 
+ color: #999;
 }
