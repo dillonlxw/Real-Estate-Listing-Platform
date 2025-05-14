@@ -182,6 +182,7 @@ nav {
 .action-buttons {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 /* Button styling */
@@ -195,6 +196,67 @@ nav {
   transition: all 0.3s ease;
   text-align: center;
   cursor: pointer; /* Make it clear it's clickable */
+  position: relative;
+}
+
+/* Sort Button Specific */
+.sort-button {
+  background-color: #ffc107; /* Amber/Yellow for Sort */
+  color: black;
+  border: 1px solid #e0a800;
+}
+
+.sort-button:hover {
+  background-color: #e0a800;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Dropdown Container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle .dropdown-caret {
+    margin-left: 5px;
+    font-size: 0.8em;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 100; /* Ensure it's above other elements */
+  border-radius: 4px;
+  right: 0; /* Align to the right of the button, or adjust as needed */
+  /* or left: 0; to align to the left */
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 10px 14px;
+  text-decoration: none;
+  display: block;
+  font-size: 0.85rem;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-content a.active-sort {
+    background-color: #e0e0e0; /* Highlight active sort */
+    font-weight: bold;
+}
+
+/* Show the dropdown menu (add class .show-dropdown to an element to show it) */
+.show-dropdown {
+  display: block;
 }
 
 /* Add button - for adding new properties */
@@ -364,12 +426,6 @@ nav {
 .filter-form label span { /* For minPriceValue, maxPriceValue */
   font-weight: bold;
   color: #333;
-}
-
-/* Styles for Status Filter Radio Buttons */
-.status-filter-options {
-  /* Removed: display: flex; gap: 15px; */
-  /* This div will now just be a container for vertically stacked options */
 }
 
 .status-option {

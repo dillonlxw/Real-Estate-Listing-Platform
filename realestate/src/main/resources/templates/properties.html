@@ -32,6 +32,18 @@
                 <div class="properties-header">
                     <h1 th:text="${propertiesMessage}">Properties</h1>
                     <div class="action-buttons">
+                        <!-- Sort Dropdown Button -->
+                        <div class="dropdown">
+                            <button class="action-button sort-button dropdown-toggle" onclick="toggleDropdown('sortDropdownContent')">
+                                Sort <span class="dropdown-caret">▾</span>
+                            </button>
+                            <div id="sortDropdownContent" class="dropdown-content">
+                                <a th:href="@{/properties(minPrice=${currentMinPrice != null ? #numbers.formatDecimal(currentMinPrice,1,2,'POINT') : ''}, maxPrice=${currentMaxPrice != null ? #numbers.formatDecimal(currentMaxPrice,1,2,'POINT') : ''}, status=${currentStatus}, sortOrder='price,asc')}"
+                                   th:classappend="${currentSortOrder == 'price,asc' ? 'active-sort' : ''}">Price: Low to High</a>
+                                <a th:href="@{/properties(minPrice=${currentMinPrice != null ? #numbers.formatDecimal(currentMinPrice,1,2,'POINT') : ''}, maxPrice=${currentMaxPrice != null ? #numbers.formatDecimal(currentMaxPrice,1,2,'POINT') : ''}, status=${currentStatus}, sortOrder='price,desc')}"
+                                   th:classappend="${currentSortOrder == 'price,desc' ? 'active-sort' : ''}">Price: High to Low</a>
+                            </div>
+                        </div>
                         <a class="action-button select-button" onclick="showPopup('filterPopup')">Filter</a>
                         <!-- Filter Popup -->
                         <div id="filterPopup" class="popup">
@@ -39,7 +51,7 @@
                                 <span class="close-button" onclick="hidePopup('filterPopup')">×</span>
                                 <h2>Filter Properties</h2>
                                 <form th:action="@{/properties}" method="get" class="filter-form">
-                                    <!-- ... price filter form groups ... -->
+                                    <input type="hidden" name="sortOrder" th:value="${currentSortOrder}" /> <!-- Preserve sort order -->
                                     <div class="form-group">
                                         <label for="minPrice">Min Price: <span id="minPriceValue" th:text="${#numbers.formatCurrency(currentMinPrice)}">$0</span></label>
                                         <input type="range" id="minPrice" name="minPrice"
@@ -56,7 +68,6 @@
                                                th:value="${currentMaxPrice}"
                                                step="1000" class="price-slider">
                                     </div>
-        
                                     <div class="form-group">
                                         <label>Status:</label>
                                         <div class="status-filter-options">
@@ -74,7 +85,6 @@
                                             </div>
                                         </div>
                                     </div>
-        
                                     <button type="submit" class="action-button apply-filter-button">Apply Filter</button>
                                 </form>
                             </div>
@@ -94,7 +104,7 @@
                     <table class="properties-table">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <!-- ID column removed -->
                                 <th>Property Name</th>
                                 <th>Address</th>
                                 <th>Price</th>
@@ -104,10 +114,10 @@
                         </thead>
                         <tbody>
                             <tr th:if="${properties.isEmpty()}">
-                                <td colspan="6" style="text-align: center;">No properties available the selected criteria.</td>
+                                <td colspan="5" style="text-align: center;">No properties available for the selected criteria.</td> <!-- colspan changed -->
                             </tr>
                             <tr th:each="property : ${properties}">
-                                <td th:text="${property.id}">1</td>
+                                <!-- ID td removed -->
                                 <td th:text="${property.propertyName}">Modern Apartment</td>
                                 <td th:text="${property.address}">123 Main St, City</td>
                                 <td th:text="${#numbers.formatCurrency(property.price)}">$350,000</td>
@@ -122,10 +132,10 @@
         </div>
     </div>
 <script th:inline="javascript">
-    // JavaScript popups and price range sliders
-    const maxOverallPrice = /*[[${maxOverallPrice}]]*/ 5000000; // Default from Thymeleaf
+    // JavaScript for popups, price range sliders, and dropdown
+    const maxOverallPrice = /*[[${maxOverallPrice}]]*/ 5000000;
+    const currentSortOrderJS = /*[[${currentSortOrder}]]*/ 'default';
 
-    // Show/hide generic popup
     function showPopup(popupId) {
         const popup = document.getElementById(popupId);
         if (popup) popup.style.display = "block";
@@ -135,32 +145,23 @@
         if (popup) popup.style.display = "none";
     }
 
-    // Price Range Slider Logic
     const minPriceSlider = document.getElementById('minPrice');
     const maxPriceSlider = document.getElementById('maxPrice');
     const minPriceValueDisplay = document.getElementById('minPriceValue');
     const maxPriceValueDisplay = document.getElementById('maxPriceValue');
-
     const userLocale = document.documentElement.lang || navigator.language || 'en-US';
-    const defaultCurrency = 'USD'; 
-
+    const defaultCurrency = 'USD';
     const currencyFormatter = new Intl.NumberFormat(userLocale, {
-        style: 'currency',
-        currency: defaultCurrency, 
-        minimumFractionDigits: 0, 
-        maximumFractionDigits: 0  
+        style: 'currency', currency: defaultCurrency, minimumFractionDigits: 0, maximumFractionDigits: 0
     });
 
     function updatePriceDisplay(value, displayElement) {
-        if (displayElement) {
-            displayElement.textContent = currencyFormatter.format(value);
-        }
+        if (displayElement) displayElement.textContent = currencyFormatter.format(value);
     }
 
     if (minPriceSlider && maxPriceSlider && minPriceValueDisplay && maxPriceValueDisplay) {
         updatePriceDisplay(minPriceSlider.value, minPriceValueDisplay);
         updatePriceDisplay(maxPriceSlider.value, maxPriceValueDisplay);
-
         minPriceSlider.addEventListener('input', function() {
             let minValue = parseFloat(this.value);
             let maxValue = parseFloat(maxPriceSlider.value);
@@ -170,7 +171,6 @@
             }
             updatePriceDisplay(minValue, minPriceValueDisplay);
         });
-
         maxPriceSlider.addEventListener('input', function() {
             let maxValue = parseFloat(this.value);
             let minValue = parseFloat(minPriceSlider.value);
@@ -182,8 +182,22 @@
         });
     }
 
-    // Close popups when clicking outside
-    document.addEventListener('click', function(event) {
+    function toggleDropdown(dropdownId) {
+        document.getElementById(dropdownId).classList.toggle("show-dropdown");
+    }
+
+    // Close dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropdown-toggle')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show-dropdown')) {
+                    openDropdown.classList.remove('show-dropdown');
+                }
+            }
+        }
+        // Close popups (filter, add)
         const popups = ['filterPopup', 'addPropertyPopup'];
         popups.forEach(popupId => {
             const popup = document.getElementById(popupId);
@@ -195,13 +209,14 @@
                 } else if (popupId === 'addPropertyPopup' && event.target.classList.contains('add-button')) {
                     isOpeningButton = true;
                 }
-
-                if (popupContent && !popupContent.contains(event.target) && !isOpeningButton) {
-                    hidePopup(popupId);
+                if (popupContent && !popupContent.contains(event.target) && !isOpeningButton && !event.target.closest('.popup-content')) {
+                     if (!event.target.matches('.select-button') && !event.target.matches('.add-button')) { // ensure not clicking the open button itself
+                        hidePopup(popupId);
+                     }
                 }
             }
         });
-    });
+    }
 </script>
 </body>
 </html>
