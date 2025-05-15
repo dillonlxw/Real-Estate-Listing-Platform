@@ -39,11 +39,9 @@ nav {
   display: flex;
   align-items: center;
 }
-.logo-circle {
+.logo img {
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff, #000000);
   margin-right: 5px;
 }
 .company-text {
