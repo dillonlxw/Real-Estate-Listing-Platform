@@ -327,7 +327,7 @@ nav {
 }
 
 .properties-table tbody tr.clickable-property-row:hover {
-  background-color: #e9f5ff; /* Light blue hover for clickable rows */
+  background-color: #bde1ff; /* Light blue hover for clickable rows */
 }
 
 /* Background image container */
@@ -579,4 +579,11 @@ nav {
   color: #721c24;
   background-color: #f8d7da;
   border-color: #f5c6cb;
+}
+
+.table-hint-message {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #555;
 }
