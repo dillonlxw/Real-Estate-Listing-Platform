@@ -1,5 +1,5 @@
 # Real-Estate-Listing-Platform
-A web application enabling users to browse properties for sale and rent, and agents to manage their listings.
+A web application enabling users to browse properties for sale and rent, and agents to add their listings.
 
 # Framework
 Spring Boot
@@ -20,7 +20,7 @@ Java
 | Group | com.myrealestate |
 | Artifact | realestate |
 | Name | RealEstateApp |
-| Description | A web application enabling users to browse properties for sale and rent, and agents to manage their listings. |
+| Description | A web application enabling users to browse properties for sale and rent, and agents to add their listings. |
 | Package Name | com.myrealestate.realestate |
 | Packaging | Jar |
 | Java | 21 |
@@ -33,3 +33,9 @@ Java
 - Testcontainers (TESTING)
 - Spring Boot DevTools (DEVELOPER TOOLS)
 - Thymeleaf (TEMPLATE ENGINES)
+
+# How to Run
+1. Clone the repository
+2. Run `./gradlew bootRun` to run the project
+3. Open `http://localhost:8080` in your browser
+
