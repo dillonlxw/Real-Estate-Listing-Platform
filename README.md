@@ -36,6 +36,6 @@ Java
 
 # How to Run
 1. Clone the repository
-2. Run `./gradlew bootRun` to run the project
-3. Open `http://localhost:8080` in your browser
-
+2. Ensure `Docker Desktop` is installed and running
+3. Run `./gradlew bootRun` to run the project
+4. Open `http://localhost:8080` in your browser
