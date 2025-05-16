@@ -35,9 +35,10 @@ Java
 - Thymeleaf (TEMPLATE ENGINES)
 
 # How to Run
-###Prerequisite
+## Prerequisite
 Only works in specific VM. Thus, not runnable.
 
+## Steps
 1. Clone the repository
 2. Go to project directory `realestate`
 3. Run `./gradlew bootRun` to run the project
