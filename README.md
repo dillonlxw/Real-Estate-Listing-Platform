@@ -36,7 +36,7 @@ Java
 
 # How to Run
 ## Prerequisite
-Only works in specific VM. Thus, not runnable.
+This repo has been set to a specific Virtual Machine, thus only when the VM is running, the application can only work.
 
 ## Steps
 1. Clone the repository
