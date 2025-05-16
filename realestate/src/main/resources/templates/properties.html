@@ -184,6 +184,13 @@
                 <h2 id="actionSuccessMessage">Action successful!</h2> <!-- Dynamic Message -->
             </div>
         </div>
+        <!-- Action Error Popup -->
+        <div id="actionErrorPopup" class="popup" data-backdrop-close="true">
+            <div class="popup-content popup-small">
+                <span class="close-button" onclick="hidePopupAndRefresh('actionErrorPopup')">×</span>
+                <h2 id="actionErrorMessage"></h2> <!-- Dynamic Message -->
+            </div>
+        </div>
     </div>
 
 <script th:inline="javascript">
@@ -372,8 +379,16 @@
                     })
                     .catch(error => {
                         console.error('Error processing property action:', error);
-                        alert('Failed to process action: ' + error.message);
-                        hidePopup('actionConfirmPopup'); 
+                        // Hide the confirmation popup first
+                        hidePopup('actionConfirmPopup');
+                        const errorMessageEl = document.getElementById('actionErrorMessage');
+                        if (errorMessageEl) {
+                            // Use the error message from the thrown Error object (e.g., "Property not found.")
+                            errorMessageEl.textContent = error.message || 'An unknown error occurred.';
+                        }
+                        // Show the new error popup
+                        showPopup('actionErrorPopup');
+                        // Page refresh will happen when actionErrorPopup is closed via hidePopupAndRefresh
                     })
                     .finally(() => {
                         // Re-enable buttons (they are reset inside hidePopup for 'actionConfirmPopup')
